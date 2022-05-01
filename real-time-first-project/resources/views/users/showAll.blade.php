@@ -18,10 +18,9 @@
 <script>
   window.axios.get("/api/users").then((response) => {
     const userElements = document.getElementById("users");
-    let users = response.data.slice(2);
-    let parse = JSON.parse(users);
-    console.log(parse);
-    parse.forEach((user, index) => {
+    let users = response.data;
+    console.log(users);
+    users.forEach((user, index) => {
       let element = document.createElement("li");
       element.setAttribute("id", user.id);
       element.innerText = user.name;
