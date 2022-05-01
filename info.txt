@@ -1,2 +1,4 @@
 php artisan make:event UserSessionChanged
 php artisan make:listener BroadcastUserLoginNotification
+php artisan make:command GameExecutor
+php artisan game:execute
