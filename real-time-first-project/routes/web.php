@@ -22,3 +22,5 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::view('/users', 'users.showAll')->name("user.all");
+
+Route::view('/game', 'game.game')->name("game.show");
