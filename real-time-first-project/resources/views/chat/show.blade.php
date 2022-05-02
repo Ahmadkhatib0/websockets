@@ -44,10 +44,7 @@
                 id="users"
                 class="list-unstyled overflow-auto text-info"
                 style="height: 45vh"
-              >
-                <li>test 1</li>
-                <li>test 1</li>
-              </ul>
+              ></ul>
             </div>
           </div>
         </div>
@@ -56,5 +53,28 @@
   </div>
 </div>
 @endsection @push("scripts")
-<script></script>
+<script>
+  const usersElement = document.getElementById("users");
+  //  join recieve the current channel name that you're using
+  window.Echo.join("chat")
+    .here((users) => {
+      // here executed every time is the user  in this  channel for the first time
+      users.forEach((user, index) => {
+        let element = document.createElement("li");
+        element.setAttribute("id", user.id);
+        element.innerText = user.name;
+        usersElement.appendChild(element);
+      });
+    })
+    .joining((user) => {
+      let element = document.createElement("li");
+      element.setAttribute("id", user.id);
+      element.innerText = user.name;
+      usersElement.appendChild(element);
+    })
+    .leaving((user) => {
+      let element = document.getElementById(user.id);
+      element.parentNode.removeChild(element);
+    });
+</script>
 @endpush
