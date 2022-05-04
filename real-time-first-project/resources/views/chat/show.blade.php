@@ -15,10 +15,7 @@
                     id="messages"
                     class="list-unstyled overflow-auto border border-1 p-1"
                     style="height: 45vh"
-                  >
-                    <li>Test1: hello</li>
-                    <li>Test1: Hi there</li>
-                  </ul>
+                  ></ul>
                 </div>
                 <form>
                   <div class="row p-3">
@@ -55,6 +52,7 @@
 @endsection @push("scripts")
 <script>
   const usersElement = document.getElementById("users");
+  const messagesElement = document.getElementById("messages");
   //  join recieve the current channel name that you're using
   window.Echo.join("chat")
     .here((users) => {
@@ -75,6 +73,25 @@
     .leaving((user) => {
       let element = document.getElementById(user.id);
       element.parentNode.removeChild(element);
+    })
+    .listen("MessageSent", (e) => {
+      console.log(e);
+      let element = document.createElement("li");
+      element.setAttribute("id", e.user.id);
+      element.innerText = e.user.name + ": " + e.message;
+      messagesElement.appendChild(element);
     });
 </script>
+<script>
+  const messageElement = document.getElementById("message");
+  const sendElement = document.getElementById("send");
+  sendElement.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.axios.post("/chat/message", {
+      message: messageElement.value,
+    });
+    messageElement.value = "";
+  });
+</script>
+
 @endpush
