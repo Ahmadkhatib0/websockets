@@ -1,5 +1,9 @@
 @extends('layouts.app') @push('styles')
-<style type="text/css"></style>
+<style type="text/css">
+  #users > li {
+    cursor: pointer;
+  }
+</style>
 @endpush @section('content')
 <div class="container-fluid">
   <div class="row justify-content-center">
@@ -60,6 +64,7 @@
       users.forEach((user, index) => {
         let element = document.createElement("li");
         element.setAttribute("id", user.id);
+        element.setAttribute("onclick", "greetUser(" + user.id + ")");
         element.innerText = user.name;
         usersElement.appendChild(element);
       });
@@ -67,6 +72,7 @@
     .joining((user) => {
       let element = document.createElement("li");
       element.setAttribute("id", user.id);
+      element.setAttribute("onclick", "greetUser(" + user.id + ")");
       element.innerText = user.name;
       usersElement.appendChild(element);
     })
@@ -93,5 +99,20 @@
     messageElement.value = "";
   });
 </script>
-
+<script>
+  function greetUser(id) {
+    window.axios.post("/chat/greet/" + id);
+  }
+</script>
+<script>
+  window.Echo.private("chat.greet.{{ auth()->user()->id }}").listen(
+    "GreetingSent",
+    (e) => {
+      let element = document.createElement("li");
+      element.innerText = e.message;
+      element.classList.add("text-success");
+      messagesElement.appendChild(element);
+    }
+  );
+</script>
 @endpush
