@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- we got this path available because of the path sat to socket.io and serveClient 
+        sat to true be default in the config io in backend  -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    #messages li {
+      padding: 5px 10px;
+    }
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
+  </style>
+
+  <body>
+    <h1 class="text-center">Chat App</h1>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <form id="message-form">
+            <div class="col-md-10">
+              <input
+                type="text"
+                id="user-message"
+                placeholder="enter your message"
+                class="w-100"
+              />
+            </div>
+            <div class="col-md-2 mt-2">
+              <button class="btn btn-primary w-100" type="submit">SEND</button>
+            </div>
+          </form>
+          <ul id="messages" class="list-unstyled m-0 p-0"></ul>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      var io = io.connect("http://localhost:9000");
+      io.on("messageFromServer", (data) => {
+        console.log(data);
+      });
+      io.emit("messageToServer", {
+        data: "this message from the client to the chat server",
+      });
+      io.on("connect", () => {
+        let engine = io.io.engine;
+        engine.on("ping", () => {
+          console.log("ping was received from the server");
+        });
+        engine.on("packetCreate", ({ type, data }) => {
+          // called for each packet sent
+          console.log(type); //pong
+          console.log(data); // undefined
+        });
+      });
+
+      window.document
+        .querySelector("#message-form")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const newMessage = document.querySelector("#user-message").value;
+          io.emit("newMessageToServer", { text: newMessage });
+          console.log(newMessage);
+        });
+
+      io.on("messageToClients", (message) => {
+        const ul = document.querySelector("#messages");
+        const li = document.createElement("li");
+        li.innerText = message.text;
+        ul.appendChild(li);
+      });
+    </script>
+  </body>
+</html>
