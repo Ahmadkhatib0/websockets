@@ -10,6 +10,13 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
     <div class="container-fluid">
@@ -20,12 +27,7 @@
         <div class="col-sm-2 rooms">
           <h3>Rooms</h3>
           <ul class="room-list">
-            <li onclick="joinRoom(1,2)">
-              <span class="glyphicon glyphicon-lock"></span>Main Room
-            </li>
-            <li onclick="joinRoom(2,1)">
-              <span class="glyphicon glyphicon-globe"></span>Meeting Room
-            </li>
+            <!--  -->
           </ul>
         </div>
         <div class="chat-panel col-sm-9">
@@ -102,6 +104,8 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="./scripts.js"></script>
+    <script src="./joinNs.js"></script>
+    <script src="./joinRoom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

@@ -14,24 +14,5 @@ socket.on("nsList", (nsData) => {
       });
     }
   );
-});
-
-window.document
-  .querySelector("#user-input")
-  .addEventListener("submit", (event) => {
-    event.preventDefault();
-    const newMessage = document.querySelector("#user-message").value;
-    socket.emit("newMessageToServer", { text: newMessage });
-    console.log(newMessage);
-  });
-
-socket.on("messageToClients", (message) => {
-  const ul = document.querySelector("#messages");
-  const li = document.createElement("li");
-  li.innerText = message.text;
-  ul.appendChild(li);
-});
-
-socket.on("joined", (msg) => {
-  console.log(msg);
+  joinNs("wiki");
 });
