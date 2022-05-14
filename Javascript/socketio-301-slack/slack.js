@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const { Server } = require("socket.io");
+let namespaces = require("./data/namespaces");
 
 app.use(express.static(__dirname + "/public"));
 
@@ -8,16 +9,17 @@ const expressServer = app.listen(9000);
 
 const io = new Server(expressServer);
 io.on("connection", (socket) => {
-  socket.emit("messageFromServer", { data: "hey from the chat server" });
-  socket.on("messageToServer", (message) => {
-    console.log(message);
+  let nsData = namespaces.map((ns) => {
+    return {
+      img: ns.img,
+      endpoint: ns.endpoint,
+    };
   });
-  socket.join("level1");
-  socket
-    .to("level1")
-    .emit("joined", `${socket.id} i've joined the level1 room`);
-  socket.on("newMessageToServer", (message) => {
-    io.emit("messageToClients", { text: message.text });
-    io.of("/").emit("messageToClients", { text: message.text }); //tow lines are =
+  socket.emit("nsList", nsData);
+});
+
+namespaces.forEach((namespace) => {
+  io.of(namespace.endpoint).on("connection", (socket) => {
+    console.log(`${socket.id} has joined the ${namespace.endpoint}`);
   });
 });
