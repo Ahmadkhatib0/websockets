@@ -1,5 +1,5 @@
 var socket = io.connect("http://localhost:9000");
-
+let nsSocket = "";
 socket.on("nsList", (nsData) => {
   let nameSpaceDiv = document.querySelector(".namespaces");
   nameSpaceDiv.innerHtml = "";
