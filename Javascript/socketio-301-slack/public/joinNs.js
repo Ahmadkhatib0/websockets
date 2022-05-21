@@ -1,7 +1,13 @@
 function joinNs(endpoint) {
-  nsSocket = io(`http://localhost:9000/${endpoint}`);
+  if (nsSocket) {
+    nsSocket.close();
+    // remove event listener before its added again
+    document
+      .querySelector("#user-input")
+      .removeEventListener("submit", formSubmissionEvent);
+  }
+  nsSocket = io(`http://localhost:9000${endpoint}`);
   nsSocket.on("nsRoomLoad", (rooms) => {
-    console.log(rooms);
     let roomList = document.querySelector(".room-list");
     roomList.innerHTML = "";
     rooms.forEach((room) => {
@@ -14,7 +20,9 @@ function joinNs(endpoint) {
 
     let roomNodes = document.getElementsByClassName("room");
     Array.from(roomNodes).forEach((element) => {
-      element.addEventListener("click", (e) => {});
+      element.addEventListener("click", (e) => {
+        joinRoom(e.target.innerText);
+      });
     });
     // add user automatically, at first time here
     const topRoom = document.querySelector(".room");
@@ -24,17 +32,18 @@ function joinNs(endpoint) {
 
   nsSocket.on("messageToClients", (message) => {
     const newMessage = buildHTML(message);
-    console.log(newMessage);
     document.querySelector("#messages").innerHTML += newMessage;
   });
   window.document
     .querySelector("#user-input")
-    .addEventListener("submit", (event) => {
-      event.preventDefault();
-      const newMessage = document.querySelector("#user-message").value;
-      nsSocket.emit("newMessageToServer", { text: newMessage });
-      console.log(newMessage);
-    });
+    .addEventListener("submit", formSubmissionEvent);
+}
+
+function formSubmissionEvent(event) {
+  event.preventDefault();
+  const newMessage = document.querySelector("#user-message").value;
+  nsSocket.emit("newMessageToServer", { text: newMessage });
+  newMessage.innerText = "";
 }
 
 function buildHTML(msg) {
