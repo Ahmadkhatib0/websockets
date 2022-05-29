@@ -83,7 +83,7 @@ if (cluster.isMaster) {
   // Don't expose our internal server to the outside world.
   const server = app.listen(0, "localhost");
   // console.log("Worker listening...");
-  const io = new Server(server);
+  const io = new Server(server, { cors: { origin: "*" } });
 
   // Tell Socket.IO to use the redis adapter. By default, the redis
   // server is assumed to be on localhost:6379. You don't have to

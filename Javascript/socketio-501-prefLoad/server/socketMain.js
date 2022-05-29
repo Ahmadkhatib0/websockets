@@ -5,12 +5,13 @@ mongoose.connect("mongodb://127.0.0.1/perfData", { useNewUrlParser: true });
 function socketMain(io, socket) {
   let macA;
   socket.on("clientAuth", (key) => {
-    if (key == "dfldfslkjdslfdsdf") {
+    if (key === "dfldfslkjdslfdsdf") {
       // valid node client has joined
       socket.join("clients");
-    } else if (key == "kldfklfdlkdl") {
+    } else if (key === "kldfklfdlkdl") {
       //valid ui client has joined
       socket.join("ui");
+      console.log("react client has joined ");
     } else socket.disconnect(true);
   });
 
@@ -21,7 +22,8 @@ function socketMain(io, socket) {
   });
 
   socket.on("perfData", (data) => {
-    console.log(data);
+    // console.log(data);
+    io.to("ui").emit("data", data);
   });
 }
 
