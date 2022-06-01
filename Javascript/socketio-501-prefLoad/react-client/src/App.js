@@ -20,7 +20,7 @@ class App extends Component {
     });
   }
   render() {
-    console.log(this.state.performanceData);
+    // console.log(this.state.performanceData);
     let widgets = [];
     const data = this.state.performanceData;
     Object.entries(data).forEach(([key, value]) => {

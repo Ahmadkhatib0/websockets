@@ -12,7 +12,22 @@ function socketMain(io, socket) {
       //valid ui client has joined
       socket.join("ui");
       console.log("react client has joined ");
+      Machine.find({}, (err, doc) => {
+        doc.forEach((aMachine) => {
+          aMachine.isActive = false;
+          io.to("ui").emit("data", aMachine);
+        });
+      });
     } else socket.disconnect(true);
+  });
+
+  socket.on("disconnect", () => {
+    Machine.find({ macA: macA }, (err, docs) => {
+      if (docs.length > 0) {
+        docs[0].isActive = false;
+        io.to("ui").emit("data", docs[0]);
+      }
+    });
   });
 
   socket.on("initPerfData", async (data) => {

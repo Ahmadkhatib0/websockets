@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Cpu from "./Cpu";
 import Mem from "./Mem";
 import Info from "./Info";
+import "./widget.css";
 
 class Widget extends Component {
   constructor() {
@@ -24,8 +25,12 @@ class Widget extends Component {
       isActive,
       macA,
     } = this.props.data;
-    const cpu = { cpuLoad };
-    const mem = { totalMem, freeMem, usedMem, memUsage };
+
+    const cpuWidgetId = `cpu-widget-${macA}`;
+    const memWidgetId = `mem-widget-${macA}`;
+
+    const cpu = { cpuLoad, cpuWidgetId };
+    const mem = { totalMem, freeMem, usedMem, memUsage, memWidgetId };
     const info = {
       macA,
       osType,
@@ -35,8 +40,13 @@ class Widget extends Component {
       cpuSpeed,
       isActive,
     };
+
+    let notActiveDiv = "";
+    if (!isActive) notActiveDiv = <div className="not-active"> Offline </div>;
+
     return (
-      <div>
+      <div className="mt-3 widget row">
+        {notActiveDiv}
         <Cpu cpuData={cpu} />
         <Mem memData={mem} />
         <Info infoData={info} />
