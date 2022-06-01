@@ -7,8 +7,12 @@ socket.on("connect", () => {
   const nI = os.networkInterfaces();
   let macA;
   for (let key in nI) {
-    if (!nI[key][0].internal) macA = nI[key][0].mac;
-    break;
+    if (!nI[key][0].internal) {
+      if (nI[key][0].mac === "00:00:00:00:00:00")
+        macA = Math.random().toString(36).substr(2, 15);
+      else macA = nI[key][0].mac;
+      break;
+    }
   }
 
   socket.emit("clientAuth", "dfldfslkjdslfdsdf");
@@ -21,6 +25,7 @@ socket.on("connect", () => {
   let perfDataInterval = setInterval(() => {
     performanceData().then((allPerformanceData) => {
       //   console.log(allPerformanceData);
+      allPerformanceData.macA = macA;
       socket.emit("perfData", allPerformanceData);
     });
   }, 1000);
@@ -39,7 +44,7 @@ function performanceData() {
     //  - total
     const totalMem = os.totalmem();
     const usedMem = totalMem - freeMem;
-    const memUseage = Math.floor((usedMem / totalMem) * 100) / 100;
+    const memUsage = Math.floor((usedMem / totalMem) * 100) / 100;
     // - OS type
     const osType = os.type() == "Darwin" ? "Mac" : os.type();
     // - uptime
@@ -57,7 +62,7 @@ function performanceData() {
       freeMem,
       totalMem,
       usedMem,
-      memUseage,
+      memUsage,
       osType,
       upTime,
       cpuModel,
